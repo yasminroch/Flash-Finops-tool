@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const API_BASE = (window._env && window._env.VITE_API_URL) || '/api';
 
 function getToken() {
   return localStorage.getItem('flash_token');
