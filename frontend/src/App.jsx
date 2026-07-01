@@ -36,28 +36,28 @@ function App() {
             className={page === 'dashboard' ? 'active' : ''}
             onClick={() => setPage('dashboard')}
           >
-             Dashboard FinOps
+            📊 Dashboard FinOps
           </button>
           <button
             className={page === 'chat' ? 'active' : ''}
             onClick={() => setPage('chat')}
           >
-             Assistente IA
+            🤖 Chat IA
           </button>
           <button
             className={page === 'sql' ? 'active' : ''}
             onClick={() => setPage('sql')}
           >
-             Editor SQL
+            💻 Editor SQL
           </button>
           <button
             className={page === 'data' ? 'active' : ''}
             onClick={() => setPage('data')}
           >
-             Dados & Upload
+            📁 Dados & Upload
           </button>
           <button onClick={handleLogout} style={{marginTop: 'auto'}}>
-             Sair ({user?.name || 'Usuário'})
+            🚪 Sair ({user?.name || 'Usuário'})
           </button>
         </nav>
       </aside>
