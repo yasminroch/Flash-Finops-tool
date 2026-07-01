@@ -177,10 +177,10 @@ docker compose up --build
 
 | Variável | Obrigatória | Descrição |
 |---|---|---|
-| `GEMINI_API_KEY` | ✅ | Chave da API Google Gemini 2.5 Flash |
-| `JWT_SECRET` | ✅ | Secret para assinar tokens JWT |
-| `DATABASE_URL` | ✅ | URL do PostgreSQL (preenchida pelo Compose) |
-| `DATA_PATH` | ✅ | Caminho para a pasta com os CSVs |
+| `GEMINI_API_KEY` | OK | Chave da API Google Gemini 2.5 Flash |
+| `JWT_SECRET` | OK | Secret para assinar tokens JWT |
+| `DATABASE_URL` | OK | URL do PostgreSQL (preenchida pelo Compose) |
+| `DATA_PATH` | OK | Caminho para a pasta com os CSVs |
 | `VITE_API_URL` | Frontend | URL do backend (em produção) |
 
 ---
