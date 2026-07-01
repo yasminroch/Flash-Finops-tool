@@ -1,4 +1,4 @@
-# ⚡ Flash FinOps Tool
+# Flash FinOps Tool
 
 Plataforma interna de análise de custos e licenças do Metabase, construída como alternativa ao BI tradicional. Combina um backend em **FastAPI**, frontend em **React + Vite** e IA generativa via **Gemini 2.5 Flash** para análise conversacional dos dados.
 
