@@ -1,0 +1,25 @@
+services:
+  - type: web_service
+    name: flash-analytics-backend
+    env: docker
+    branch: main
+    plan: starter
+    dockerfilePath: backend/Dockerfile
+    buildContext: backend
+    envVars:
+      - key: DATA_PATH
+        value: /app/Data
+      - key: JWT_SECRET
+      - key: GEMINI_API_KEY
+      - key: DATABASE_URL
+
+  - type: web_service
+    name: flash-analytics-frontend
+    env: docker
+    branch: main
+    plan: starter
+    dockerfilePath: frontend/Dockerfile
+    buildContext: frontend
+    envVars:
+      - key: PORT
+        value: 4173
