@@ -1,4 +1,7 @@
-const API_BASE = (window._env && window._env.VITE_API_URL) || '/api';
+const rawApiUrl = window._env && window._env.VITE_API_URL && window._env.VITE_API_URL.trim();
+const API_BASE = rawApiUrl
+  ? rawApiUrl.replace(/\/+$|\/api$/i, '') + '/api'
+  : '/api';
 
 function getToken() {
   return localStorage.getItem('flash_token');
