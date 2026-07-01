@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Data Platform — Proposta Técnica</title>
+<style>
+  :root {
+    --ink: #1a1a18;
+    --ink2: #3d3d3a;
+    --muted: #6b6b67;
+    --faint: #9c9a93;
+    --line: #e0ddd5;
+    --line2: #cccac2;
+    --paper: #fafaf8;
+    --card: #ffffff;
+    --accent: #1a5fb4;
+    --accent-bg: #e8f1fc;
+    --success: #2d6a2d;
+    --success-bg: #e8f5e8;
+    --warn: #7a4a00;
+    --warn-bg: #fff3d4;
+    --danger: #8b1a1a;
+    --danger-bg: #fdeaea;
+    --purple: #4a2d8b;
+    --purple-bg: #f0ecfb;
+    --teal: #0f6e56;
+    --teal-bg: #e1f5ee;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e8e6df;
+      --ink2: #c2c0b6;
+      --muted: #9c9a92;
+      --faint: #73726c;
+      --line: #3a3935;
+      --line2: #4a4945;
+      --paper: #1a1a18;
+      --card: #242420;
+      --accent: #7ab3e8;
+      --accent-bg: #0c2540;
+      --success: #7ec87e;
+      --success-bg: #0d2e0d;
+      --warn: #f5c542;
+      --warn-bg: #2a1e00;
+      --danger: #f08080;
+      --danger-bg: #2e0a0a;
+      --purple: #b09aec;
+      --purple-bg: #1e1440;
+      --teal: #5dcaa5;
+      --teal-bg: #04342c;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  .doc-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 5rem;
+  }
+
+  /* COVER */
+  .cover {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .cover-eyebrow {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .cover-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .cover-subtitle {
+    font-size: 1.3rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
+  .cover-meta {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .cover-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* TOC */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--line2);
+    border-radius: 4px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .toc-title {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .toc ol {
+    list-style: none;
+    counter-reset: toc;
+  }
+
+  .toc li {
+    counter-increment: toc;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    line-height: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .toc li::before {
+    content: "0" counter(toc);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--faint);
+    min-width: 1.8rem;
+  }
+
+  .toc a {
+    color: var(--ink2);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+
+  .toc a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 4rem;
+    padding-top: 1rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section-num {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    text-transform: uppercase;
+    min-width: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2rem 0 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 1.25rem 0 0.5rem;
+  }
+
+  p { margin-bottom: 1rem; color: var(--ink2); }
+
+  strong { color: var(--ink); font-weight: 700; }
+
+  /* CALLOUT BOXES */
+  .callout {
+    padding: 1rem 1.25rem;
+    border-radius: 3px;
+    margin: 1.5rem 0;
+    border-left: 3px solid;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .callout-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .callout.insight { background: var(--accent-bg); border-color: var(--accent); color: var(--ink2); }
+  .callout.insight .callout-label { color: var(--accent); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn); color: var(--ink2); }
+  .callout.warn .callout-label { color: var(--warn); }
+  .callout.success { background: var(--success-bg); border-color: var(--success); color: var(--ink2); }
+  .callout.success .callout-label { color: var(--success); }
+  .callout.purple { background: var(--purple-bg); border-color: var(--purple); color: var(--ink2); }
+  .callout.purple .callout-label { color: var(--purple); }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+  }
+
+  thead th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid var(--line2);
+  }
+
+  tbody td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink2);
+    vertical-align: top;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--paper); }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  .pill.green { background: var(--success-bg); color: var(--success); }
+  .pill.red { background: var(--danger-bg); color: var(--danger); }
+  .pill.blue { background: var(--accent-bg); color: var(--accent); }
+  .pill.gray { background: var(--line); color: var(--muted); }
+  .pill.purple { background: var(--purple-bg); color: var(--purple); }
+  .pill.teal { background: var(--teal-bg); color: var(--teal); }
+
+  /* CODE */
+  pre, code {
+    font-family: 'Courier New', 'Menlo', monospace;
+    font-size: 13px;
+  }
+
+  pre {
+    background: var(--card);
+    border: 1px solid var(--line2);
+    border-radius: 3px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    line-height: 1.6;
+    color: var(--ink2);
+  }
+
+  code {
+    background: var(--line);
+    padding: 1px 5px;
+    border-radius: 2px;
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  pre code { background: none; padding: 0; border-radius: 0; }
+
+  /* ARCH DIAGRAM */
+  .arch-diagram {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    background: var(--card);
+    border: 1px solid var(--line2);
+    border-radius: 3px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+
+  .arch-layer {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 6px;
+  }
+
+  .arch-label {
+    width: 110px;
+    min-width: 110px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    display: flex;
+    align-items: center;
+    padding-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .arch-boxes {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+
+  .arch-box {
+    padding: 6px 12px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+
+  .arch-box.blue { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+  .arch-box.teal { background: var(--teal-bg); border-color: var(--teal); color: var(--teal); }
+  .arch-box.purple { background: var(--purple-bg); border-color: var(--purple); color: var(--purple); }
+  .arch-box.gray { background: var(--line); border-color: var(--line2); color: var(--muted); }
+  .arch-box.warn { background: var(--warn-bg); border-color: var(--warn); color: var(--warn); }
+  .arch-box.green { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+
+  .arch-arrow {
+    text-align: center;
+    color: var(--faint);
+    font-size: 14px;
+    line-height: 1;
+    margin: 2px 0;
+    padding-left: 110px;
+  }
+
+  /* ROADMAP */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--line2);
+    border: 1px solid var(--line2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .roadmap-col {
+    background: var(--card);
+    padding: 1rem 1rem 1.25rem;
+  }
+
+  .roadmap-phase {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .roadmap-period {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  .roadmap-items {
+    list-style: none;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.9;
+    color: var(--ink2);
+  }
+
+  .roadmap-items li::before {
+    content: "→ ";
+    color: var(--faint);
+  }
+
+  /* SQL */
+  .sql-comment { color: var(--faint); }
+  .sql-kw { color: var(--accent); font-weight: 600; }
+
+  /* METRIC CARDS */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 1.5rem 0;
+  }
+
+  .metric-card {
+    background: var(--card);
+    border: 1px solid var(--line2);
+    border-radius: 3px;
+    padding: 1rem;
+  }
+
+  .metric-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .metric-value {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .metric-sub {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  /* FILE TREE */
+  .filetree {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    background: var(--card);
+    border: 1px solid var(--line2);
+    border-radius: 3px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    line-height: 2;
+    color: var(--ink2);
+  }
+
+  .filetree .dir { color: var(--accent); font-weight: 600; }
+  .filetree .file { color: var(--ink2); }
+  .filetree .comment { color: var(--faint); font-style: italic; }
+
+  /* COMPARISON TABLE */
+  .comp-winner { font-weight: 700; color: var(--success); }
+  .comp-loser { color: var(--danger); }
+
+  hr.section-rule {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 3rem 0;
+  }
+</style>
+</head>
+<body>
+<div class="doc-wrap">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-eyebrow">Documento Técnico · Case de Avaliação</div>
+    <div class="cover-title">Flash Data Platform</div>
+    <div class="cover-subtitle">Substituição do Metabase por um produto de dados moderno com IA generativa</div>
+    <div class="cover-meta">
+      <span>📅 2025</span>
+      <span>🏢 Flash</span>
+      <span>📋 Versão 1.0 — Proposta Técnica</span>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Índice</div>
+    <ol>
+      <li><a href="#s1">Arquitetura da Solução</a></li>
+      <li><a href="#s2">Produto de BI — Além de Dashboards</a></li>
+      <li><a href="#s3">Camada Analítica — FinOps do Metabase</a></li>
+      <li><a href="#s4">Requisitos de Plataforma</a></li>
+      <li><a href="#s5">MVP Executável</a></li>
+      <li><a href="#s6">Comparativo e Roadmap de Evolução</a></li>
+    </ol>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="section">
+    <div class="callout purple">
+      <div class="callout-label">Síntese Executiva</div>
+      Propomos substituir o Metabase por uma plataforma interna chamada <strong>Flash Analytics</strong>: uma aplicação web construída com FastAPI + React + DuckDB (ou BigQuery), com IA generativa embutida para geração de queries, explicação de dashboards e detecção de anomalias. A solução evolui de BI para <em>produto de dados</em>, reduz o custo de licenciamento em ~100% a longo prazo e entrega um MVP funcional em 5 dias de trabalho focado.
+    </div>
+  </div>
+
+  <!-- S1: ARQUITETURA -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Arquitetura da Solução</h2>
+    </div>
+
+    <p>A arquitetura proposta é orientada a produto, não apenas a relatórios. Cada camada tem responsabilidade clara e pode escalar independentemente. A IA não é um plugin — ela está na espinha dorsal da experiência.</p>
+
+    <h3>Visão Geral das Camadas</h3>
+
+    <div class="arch-diagram">
+      <div class="arch-layer">
+        <div class="arch-label">Frontend</div>
+        <div class="arch-boxes">
+          <div class="arch-box blue">React 18 + Vite</div>
+          <div class="arch-box blue">Recharts / ECharts</div>
+          <div class="arch-box blue">Chat Interface (IA)</div>
+          <div class="arch-box blue">Monaco Editor (SQL)</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↕</div>
+      <div class="arch-layer">
+        <div class="arch-label">API</div>
+        <div class="arch-boxes">
+          <div class="arch-box teal">FastAPI (Python 3.11)</div>
+          <div class="arch-box teal">Auth — JWT + RBAC</div>
+          <div class="arch-box teal">WebSocket (live queries)</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↕</div>
+      <div class="arch-layer">
+        <div class="arch-label">IA</div>
+        <div class="arch-boxes">
+          <div class="arch-box purple">Gemini</div>
+          <div class="arch-box purple">Anomaly Detection (Prophet)</div>
+          <div class="arch-box purple">RAG sobre schema do DW</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↕</div>
+      <div class="arch-layer">
+        <div class="arch-label">Dados</div>
+        <div class="arch-boxes">
+          <div class="arch-box warn">DuckDB (MVP local)</div>
+          <div class="arch-box warn">BigQuery / Snowflake (prod)</div>
+          <div class="arch-box warn">dbt (transformações)</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↕</div>
+      <div class="arch-layer">
+        <div class="arch-label">Infra</div>
+        <div class="arch-boxes">
+          <div class="arch-box gray">Docker Compose (MVP)</div>
+          <div class="arch-box gray">Kubernetes (prod)</div>
+          <div class="arch-box gray">PostgreSQL (metadados)</div>
+          <div class="arch-box gray">Redis (cache de queries)</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Justificativa das Escolhas</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Escolha</th>
+            <th>Por quê</th>
+            <th>Trade-off</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Backend</strong></td>
+            <td><span class="pill teal">FastAPI</span></td>
+            <td>Async nativo, OpenAPI automático, tipagem com Pydantic, ecossistema Python para IA</td>
+            <td>Menos maduro que Django para features "baterias incluídas"</td>
+          </tr>
+          <tr>
+            <td><strong>Frontend</strong></td>
+            <td><span class="pill blue">React + Vite</span></td>
+            <td>Ecossistema rico, componentes de gráficos robustos, facilidade de contratar</td>
+            <td>Bundle size maior que alternativas; mitigado com code splitting</td>
+          </tr>
+          <tr>
+            <td><strong>Banco OLAP (MVP)</strong></td>
+            <td><span class="pill warn">DuckDB</span></td>
+            <td>In-process, zero infra, lê Parquet/CSV diretamente, performa queries analíticas muito bem</td>
+            <td>Não é distribuído; substituir por BigQuery em prod sem mudar lógica de queries</td>
+          </tr>
+          <tr>
+            <td><strong>Transformações</strong></td>
+            <td><span class="pill green">dbt Core</span></td>
+            <td>Padrão de mercado, versionamento, documentação embutida, testável</td>
+            <td>Curva de aprendizado para time sem exposição prévia</td>
+          </tr>
+          <tr>
+            <td><strong>IA</strong></td>
+            <td><span class="pill purple">Claude / GPT-4o</span></td>
+            <td>Text-to-SQL de alta qualidade, contexto de schema via RAG, custo por token</td>
+            <td>Latência e custo de API; mitigado com cache de queries frequentes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Integração com Dados Existentes</h3>
+    <p>O conector de dados implementa uma interface <code>DataSource</code> com método <code>execute_query(sql) → DataFrame</code>. No MVP, DuckDB lê CSVs locais. Em produção, a mesma interface conecta ao BigQuery via <code>google-cloud-bigquery</code> sem alterar o restante da aplicação.</p>
+
+    <pre><span class="sql-comment"># Abstração de conector — troca DuckDB por BigQuery sem mudar nada acima</span>
+class DataSource(Protocol):
+    async def execute(self, sql: str) -> pd.DataFrame: ...
+    async def get_schema(self) -> SchemaInfo: ...
+
+class DuckDBSource:
+    async def execute(self, sql: str) -> pd.DataFrame:
+        return self._conn.execute(sql).df()
+
+class BigQuerySource:
+    async def execute(self, sql: str) -> pd.DataFrame:
+        return self._client.query(sql).to_dataframe()</pre>
+  </div>
+
+  <!-- S2: PRODUTO DE BI -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Produto de BI — Além de Dashboards</h2>
+    </div>
+
+    <p>A diferença entre uma ferramenta de BI e um produto de dados é a mesma entre um relatório e uma decisão. O Flash Analytics não entrega gráficos — entrega respostas, recomendações e autonomia para o usuário explorar sem depender de um analista.</p>
+
+    <div class="callout insight">
+      <div class="callout-label">Princípio de Design</div>
+      "Não é dashboard, é produto." O dashboard é o artefato mais baixo na cadeia de valor. O produto é o que o usuário consegue fazer com os dados sem saber escrever SQL.
+    </div>
+
+    <h3>1. Dashboards Interativos</h3>
+    <p>Diferente do Metabase, os dashboards são componentes React renderizados client-side com dados em cache. Isso permite:</p>
+    <ul style="padding-left: 1.5rem; color: var(--ink2); margin-bottom: 1rem; line-height: 2.2;">
+      <li>Filtros com cross-filtering automático entre gráficos</li>
+      <li>Drill-down direto no gráfico sem nova página</li>
+      <li>Export para PNG/CSV/Excel sem plugin</li>
+      <li>Modo de apresentação (fullscreen, tema escuro)</li>
+    </ul>
+
+    <h3>2. Exploração Self-Service</h3>
+    <p>Um usuário de negócio seleciona tabelas, dimensões e métricas via drag-and-drop em um explorador visual. Internamente, isso gera SQL que é executado no DW. Nenhuma linha de código necessária. O SQL gerado é exibido e pode ser copiado para o editor avançado.</p>
+
+    <h3>3. Interface Conversacional com IA — o diferencial</h3>
+    <p>Esta é a feature que transforma o produto. Um chat embutido no dashboard recebe perguntas em linguagem natural e retorna gráficos, tabelas e insights:</p>
+
+    <pre><span class="sql-comment">-- Usuário digita: "Quais centros de custo mais aumentaram licenças em outubro?"</span>
+
+<span class="sql-comment">-- IA interpreta o schema e gera:</span>
+<span class="sql-kw">SELECT</span>
+    cc.nome_centro_custo,
+    SUM(m.licencas_adicionadas) <span class="sql-kw">AS</span> novas_licencas,
+    SUM(m.custo_adicional_prorata) <span class="sql-kw">AS</span> custo_adicional
+<span class="sql-kw">FROM</span> fct_movimentacao_licencas m
+<span class="sql-kw">JOIN</span> dim_centro_custo cc <span class="sql-kw">ON</span> m.centro_custo_id = cc.id
+<span class="sql-kw">WHERE</span> m.mes_ref = '2025-10'
+  <span class="sql-kw">AND</span> m.tipo = 'adicao'
+<span class="sql-kw">GROUP BY</span> 1
+<span class="sql-kw">ORDER BY</span> novas_licencas <span class="sql-kw">DESC</span>
+<span class="sql-kw">LIMIT</span> 10</pre>
+
+    <p>A IA usa RAG sobre os metadados do dbt (descrições de tabelas, colunas, regras de negócio documentadas) para gerar SQL preciso, contextualizado e sem alucinações de schema.</p>
+
+    <h3>4. Geração Automática de Insights</h3>
+    <p>A cada refresh de dashboard, um job assíncrono roda e envia o resultado das queries para o LLM com o prompt: <em>"Analise esses dados e destaque as 3 mudanças mais relevantes em relação ao período anterior."</em> O usuário vê um painel de "Insights do dia" antes de abrir qualquer gráfico.</p>
+
+    <h3>5. Data Storytelling</h3>
+    <p>Dashboards podem ter narrativas automáticas geradas pelo LLM: um parágrafo explicando o que os dados mostram, escrito em linguagem de negócio, atualizado a cada refresh. Transforma o dashboard em um briefing executivo.</p>
+  </div>
+
+  <!-- S3: FINOPS -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Camada Analítica — FinOps do Metabase</h2>
+    </div>
+
+    <p>O case de FinOps do Metabase é o melhor exemplo de por que a Flash precisa de um produto de dados próprio: as regras de negócio são complexas, o rateio é manual, e as perguntas sobre custo real são difíceis de responder hoje. A plataforma proposta resolve isso com modelagem adequada.</p>
+
+    <h3>Modelagem — Star Schema</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Tabela</th><th>Tipo</th><th>Descrição</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>fct_licencas_metabase</code></td>
+            <td><span class="pill teal">Fato</span></td>
+            <td>Granularidade: 1 linha por mês de contrato. Contém licenças base, adicionais, custo calculado.</td>
+          </tr>
+          <tr>
+            <td><code>fct_movimentacao_licencas</code></td>
+            <td><span class="pill teal">Fato</span></td>
+            <td>Cada adição/remoção de licença com data, centro de custo e valor pró-rata.</td>
+          </tr>
+          <tr>
+            <td><code>dim_tempo</code></td>
+            <td><span class="pill blue">Dimensão</span></td>
+            <td>Calendário fiscal com referências de mês de competência e mês de faturamento (M+1).</td>
+          </tr>
+          <tr>
+            <td><code>dim_usuario</code></td>
+            <td><span class="pill blue">Dimensão</span></td>
+            <td>Usuário habilitado, último login, status (ativo/ocioso), centro de custo.</td>
+          </tr>
+          <tr>
+            <td><code>dim_centro_custo</code></td>
+            <td><span class="pill blue">Dimensão</span></td>
+            <td>Hierarquia de centros de custo para rateio.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Regras de Negócio Implementadas</h3>
+
+    <h4>Regra 1 — Custo Base Mensal</h4>
+    <pre><span class="sql-comment">-- Contrato: 610 licenças fixas desde Nov/2025</span>
+<span class="sql-comment">-- Custo anual / 12 = custo mensal base</span>
+<span class="sql-kw">SELECT</span>
+    mes_ref,
+    610 <span class="sql-kw">AS</span> licencas_contrato,
+    custo_anual_contrato / 12.0 <span class="sql-kw">AS</span> custo_mensal_base,
+    licencas_adicionais,
+    licencas_adicionais * custo_unitario_dia * dias_restantes_mes <span class="sql-kw">AS</span> custo_adicional_prorata
+<span class="sql-kw">FROM</span> fct_licencas_metabase</pre>
+
+    <h4>Regra 2 — Faturamento M+1 (exceto Nov/2025)</h4>
+    <pre><span class="sql-comment">-- Competência Nov/2025 → fatura em Nov/2025 (exceção contratual)
+-- Todo o restante: competência M → fatura em M+1</span>
+<span class="sql-kw">SELECT</span>
+    mes_competencia,
+    <span class="sql-kw">CASE</span>
+        <span class="sql-kw">WHEN</span> mes_competencia = '2025-11' <span class="sql-kw">THEN</span> '2025-11'
+        <span class="sql-kw">ELSE</span> DATE_TRUNC('month', mes_competencia + INTERVAL '1 month')
+    <span class="sql-kw">END</span> <span class="sql-kw">AS</span> mes_faturamento,
+    custo_total
+<span class="sql-kw">FROM</span> fct_licencas_metabase</pre>
+
+    <h4>Regra 3 — Licenças Ociosas</h4>
+    <pre><span class="sql-comment">-- Ocioso = habilitado há mais de 30 dias sem nenhum acesso</span>
+<span class="sql-kw">SELECT</span>
+    u.nome,
+    u.centro_custo,
+    u.data_habilitacao,
+    MAX(a.data_acesso) <span class="sql-kw">AS</span> ultimo_acesso,
+    CURRENT_DATE - MAX(a.data_acesso) <span class="sql-kw">AS</span> dias_sem_acesso,
+    custo_unitario_mes <span class="sql-kw">AS</span> custo_desperdicado
+<span class="sql-kw">FROM</span> dim_usuario u
+<span class="sql-kw">LEFT JOIN</span> fct_acessos a <span class="sql-kw">ON</span> u.id = a.usuario_id
+<span class="sql-kw">WHERE</span> u.ativo = <span class="sql-kw">true</span>
+<span class="sql-kw">GROUP BY</span> 1,2,3,5
+<span class="sql-kw">HAVING</span> dias_sem_acesso > 30 <span class="sql-kw">OR</span> MAX(a.data_acesso) <span class="sql-kw">IS NULL</span>
+<span class="sql-kw">ORDER BY</span> custo_desperdicado <span class="sql-kw">DESC</span></pre>
+
+    <h3>Perguntas Respondidas pela Plataforma</h3>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-label">Licenças contratadas</div>
+        <div class="metric-value">610</div>
+        <div class="metric-sub">Base Nov/2025</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Custo unitário estimado</div>
+        <div class="metric-value">R$XX</div>
+        <div class="metric-sub">por usuário/mês</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Licenças ociosas</div>
+        <div class="metric-value">~?</div>
+        <div class="metric-sub">Detectável em D+1</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Custo desperdiçado</div>
+        <div class="metric-value">Mensurável</div>
+        <div class="metric-sub">Por CC, por usuário</div>
+      </div>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-label">Alavanca de FinOps com IA</div>
+      A plataforma roda semanalmente um job que detecta usuários ociosos e envia automaticamente uma sugestão para o gestor de TI: <em>"15 usuários no CC Comercial não acessam o Metabase há 45 dias. Desabilitar essas licenças economizaria R$X/mês."</em>
+    </div>
+  </div>
+
+  <!-- S4: PLATAFORMA -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Requisitos de Plataforma</h2>
+    </div>
+
+    <h3>Gestão de Acesso — RBAC</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Role</th><th>Pode fazer</th><th>Não pode fazer</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill purple">Admin</span></td>
+            <td>Tudo: gerenciar usuários, conectores, secrets, permissões</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><span class="pill blue">Analyst</span></td>
+            <td>Criar dashboards, escrever SQL, publicar para grupo</td>
+            <td>Gerenciar usuários, ver dados de outro CC sem permissão</td>
+          </tr>
+          <tr>
+            <td><span class="pill teal">Viewer</span></td>
+            <td>Ver dashboards compartilhados, usar chat IA, exportar</td>
+            <td>Criar/editar dashboards, escrever SQL</td>
+          </tr>
+          <tr>
+            <td><span class="pill gray">Service</span></td>
+            <td>Acesso via API key para integração com outros sistemas</td>
+            <td>UI, chat IA</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Permissões são granulares a nível de <strong>recurso</strong> (dashboard específico, dataset, schema SQL). Implementado com Row-Level Security no DW para garantir isolamento de dados por centro de custo.</p>
+
+    <h3>Governança e Auditoria</h3>
+    <p>Toda ação é registrada em <code>audit_log</code>: quem acessou o quê, quando, qual query foi executada, qual resultado retornou. A tabela de auditoria é imutável (append-only) e indexada por usuário, recurso e timestamp. O relatório de auditoria está disponível como dashboard nativo da plataforma.</p>
+
+    <h3>Organização de Conteúdo</h3>
+    <p>Dashboards são organizados em <strong>Espaços</strong> (equivalente a pastas), com hierarquia de até 3 níveis. Cada Espaço tem permissões próprias. Dashboards podem estar em múltiplos Espaços via tags. Busca full-text sobre títulos, descrições e conteúdo dos dashboards.</p>
+
+    <h3>Compartilhamento</h3>
+    <ul style="padding-left: 1.5rem; color: var(--ink2); margin-bottom: 1rem; line-height: 2.2;">
+      <li><strong>Link público com token</strong> — compartilha com expiração, sem exigir login</li>
+      <li><strong>Embed</strong> — iframe com JWT assinado para portais internos</li>
+      <li><strong>Agendamento</strong> — envia PDF/PNG por email ou Slack em schedule configurável</li>
+      <li><strong>Snapshot</strong> — versiona estado do dashboard para auditoria histórica</li>
+    </ul>
+  </div>
+
+  <!-- S5: MVP -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>MVP Executável</h2>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-label">Objetivo do MVP</div>
+      Demonstrar o ciclo completo: carregar dados de licenças do Metabase (CSV), visualizar em dashboards interativos, e perguntar em linguagem natural. Rodando localmente em 5 minutos com Docker Compose.
+    </div>
+
+    <h3>Funcionalidades Incluídas no MVP</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Status no MVP</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Login com JWT</td><td><span class="pill green">Real</span></td></tr>
+          <tr><td>Dashboard de FinOps (licenças, custo, ociosidade)</td><td><span class="pill green">Real</span></td></tr>
+          <tr><td>Chat IA com Text-to-SQL</td><td><span class="pill green">Real (via API Claude/OpenAI)</span></td></tr>
+          <tr><td>Editor SQL manual</td><td><span class="pill green">Real</span></td></tr>
+          <tr><td>DW</td><td><span class="pill warn">Mockado (DuckDB + CSV local)</span></td></tr>
+          <tr><td>RBAC multi-role</td><td><span class="pill warn">Simplificado (admin/viewer)</span></td></tr>
+          <tr><td>Agendamento de relatórios</td><td><span class="pill gray">Fora do MVP</span></td></tr>
+          <tr><td>Multi-tenant / multi-CC</td><td><span class="pill gray">Fora do MVP</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Estrutura de Pastas</h3>
+
+    <div class="filetree">
+<span class="dir">flash-analytics/</span>
+├── <span class="dir">backend/</span>
+│   ├── <span class="dir">app/</span>
+│   │   ├── <span class="file">main.py</span>          <span class="comment"># FastAPI app</span>
+│   │   ├── <span class="dir">routers/</span>
+│   │   │   ├── <span class="file">auth.py</span>       <span class="comment"># Login, JWT</span>
+│   │   │   ├── <span class="file">queries.py</span>    <span class="comment"># Execute SQL</span>
+│   │   │   ├── <span class="file">ai.py</span>         <span class="comment"># Chat + Text-to-SQL</span>
+│   │   │   └── <span class="file">dashboards.py</span> <span class="comment"># CRUD de dashboards</span>
+│   │   ├── <span class="dir">services/</span>
+│   │   │   ├── <span class="file">llm.py</span>        <span class="comment"># Wrapper LLM (Claude/GPT)</span>
+│   │   │   ├── <span class="file">duckdb.py</span>     <span class="comment"># DataSource implementation</span>
+│   │   │   └── <span class="file">schema_rag.py</span> <span class="comment"># Schema → contexto para LLM</span>
+│   │   └── <span class="dir">models/</span>         <span class="comment"># Pydantic schemas</span>
+│   ├── <span class="file">Dockerfile</span>
+│   └── <span class="file">requirements.txt</span>
+├── <span class="dir">frontend/</span>
+│   ├── <span class="dir">src/</span>
+│   │   ├── <span class="dir">pages/</span>
+│   │   │   ├── <span class="file">Dashboard.tsx</span>  <span class="comment"># FinOps dashboard</span>
+│   │   │   ├── <span class="file">Chat.tsx</span>       <span class="comment"># Interface conversacional</span>
+│   │   │   └── <span class="file">SQLEditor.tsx</span>  <span class="comment"># Editor manual</span>
+│   │   └── <span class="dir">components/</span>     <span class="comment"># Gráficos, tabelas, filtros</span>
+│   ├── <span class="file">Dockerfile</span>
+│   └── <span class="file">package.json</span>
+├── <span class="dir">data/</span>
+│   └── <span class="file">licencas_metabase.csv</span>  <span class="comment"># Dados de entrada do MVP</span>
+├── <span class="dir">dbt/</span>                    <span class="comment"># Transformações (rodam on startup)</span>
+└── <span class="file">docker-compose.yml</span>
+    </div>
+
+    <h3>Como Rodar Localmente</h3>
+    <pre><span class="sql-comment"># 1. Clone e configure a API key do LLM</span>
+git clone https://github.com/flash/analytics-mvp
+cp .env.example .env
+echo "OPENAI_API_KEY=sk-..." >> .env
+
+<span class="sql-comment"># 2. Suba tudo com Docker Compose</span>
+docker compose up --build
+
+<span class="sql-comment"># 3. Acesse</span>
+open http://localhost:3000
+<span class="sql-comment"># Login: admin@flash.com / flash123</span></pre>
+
+    <h3>Prompt de IA — Text-to-SQL com Contexto de Schema</h3>
+    <pre><span class="sql-comment"># Cada request ao LLM inclui o schema contextualizado</span>
+SYSTEM_PROMPT = """
+Você é um analista de dados da Flash.
+Converta perguntas em SQL válido para DuckDB.
+
+Schema disponível:
+{schema_context}  ← injetado via RAG sobre metadados dbt
+
+Regras:
+- Sempre use aliases descritivos
+- Costos em R$ com 2 casas decimais
+- Datas no formato YYYY-MM
+- Retorne APENAS o SQL, sem explicação
+"""</pre>
+  </div>
+
+  <!-- S6: COMPARATIVO E ROADMAP -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Comparativo e Roadmap de Evolução</h2>
+    </div>
+
+    <h3>Metabase vs Flash Analytics</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Dimensão</th>
+            <th>Metabase (atual)</th>
+            <th>Flash Analytics (proposta)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Custo de licença</strong></td>
+            <td><span class="comp-loser">Alto, por usuário, pró-rata em adições</span></td>
+            <td><span class="comp-winner">Zero (infra interna + custo de API LLM)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Customização</strong></td>
+            <td><span class="comp-loser">Limitada ao que a ferramenta suporta</span></td>
+            <td><span class="comp-winner">100% customizável — é código seu</span></td>
+          </tr>
+          <tr>
+            <td><strong>Integração com IA</strong></td>
+            <td><span class="comp-loser">Inexistente (recursos básicos em versões pagas)</span></td>
+            <td><span class="comp-winner">Nativa — chat, insights automáticos, anomalias</span></td>
+          </tr>
+          <tr>
+            <td><strong>Controle de dados</strong></td>
+            <td><span class="comp-loser">Dependência de fornecedor externo</span></td>
+            <td><span class="comp-winner">Dados e lógica 100% internos</span></td>
+          </tr>
+          <tr>
+            <td><strong>Tempo de setup</strong></td>
+            <td><span class="comp-winner">Rápido (SaaS)</span></td>
+            <td>5 dias para MVP, ~30 dias para prod completo</td>
+          </tr>
+          <tr>
+            <td><strong>Manutenção</strong></td>
+            <td>Dependência do roadmap do Metabase</td>
+            <td><span class="comp-winner">Time interno evolui conforme necessidade</span></td>
+          </tr>
+          <tr>
+            <td><strong>Produto de dados</strong></td>
+            <td><span class="comp-loser">Dashboards apenas</span></td>
+            <td><span class="comp-winner">Chat, insights, alertas, storytelling</span></td>
+          </tr>
+          <tr>
+            <td><strong>Curva inicial</strong></td>
+            <td><span class="comp-winner">Baixa</span></td>
+            <td>Requer engenharia dedicada por ~30 dias</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-label">Estimativa de Custo</div>
+      Com 610 licenças Metabase Enterprise (~$500/usuário/ano = ~$305K/ano), a solução interna se paga no primeiro ano mesmo contando 3 meses de desenvolvimento dedicado de 2 engenheiros. A longo prazo, o custo é apenas infraestrutura e API de LLM — em geral 10–20x menor.
+    </div>
+
+    <h3>Roadmap de Evolução</h3>
+
+    <div class="roadmap">
+      <div class="roadmap-col">
+        <div class="roadmap-phase">Fase 1</div>
+        <div class="roadmap-period">MVP — Dias 1–5</div>
+        <ul class="roadmap-items">
+          <li>Dashboard FinOps Metabase</li>
+          <li>Chat Text-to-SQL</li>
+          <li>DuckDB local + CSV</li>
+          <li>Auth básica (JWT)</li>
+        </ul>
+      </div>
+      <div class="roadmap-col">
+        <div class="roadmap-phase">Fase 2</div>
+        <div class="roadmap-period">Beta — Mês 1–2</div>
+        <ul class="roadmap-items">
+          <li>Conexão BigQuery/Snowflake</li>
+          <li>RBAC completo</li>
+          <li>Editor visual (no-code)</li>
+          <li>Auditoria e logs</li>
+          <li>Deploy Kubernetes</li>
+        </ul>
+      </div>
+      <div class="roadmap-col">
+        <div class="roadmap-phase">Fase 3</div>
+        <div class="roadmap-period">Produção — Mês 3–4</div>
+        <ul class="roadmap-items">
+          <li>Detecção de anomalias</li>
+          <li>Alertas automatizados</li>
+          <li>Agendamento de relatórios</li>
+          <li>Narrativas automáticas</li>
+          <li>Catálogo de dados</li>
+        </ul>
+      </div>
+      <div class="roadmap-col">
+        <div class="roadmap-phase">Fase 4</div>
+        <div class="roadmap-period">Plataforma — Mês 5+</div>
+        <ul class="roadmap-items">
+          <li>Agente de dados autônomo</li>
+          <li>API pública para produtos</li>
+          <li>dbt Semantic Layer</li>
+          <li>Multi-tenant por BU</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Onde a IA Resolve Problemas Reais</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Feature IA</th><th>Problema que resolve</th><th>Impacto</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Text-to-SQL</strong></td>
+            <td>Analista espera horas por uma query de um engenheiro de dados</td>
+            <td><span class="pill green">Autonomia imediata</span></td>
+          </tr>
+          <tr>
+            <td><strong>Explicação de dashboard</strong></td>
+            <td>Executivo não entende o que o número significa</td>
+            <td><span class="pill green">Adoção mais rápida</span></td>
+          </tr>
+          <tr>
+            <td><strong>Detecção de anomalias</strong></td>
+            <td>Licenças saltam 20% em um mês sem alerta</td>
+            <td><span class="pill green">FinOps proativo</span></td>
+          </tr>
+          <tr>
+            <td><strong>Recomendação de otimização</strong></td>
+            <td>Licenças ociosas consumindo orçamento sem ser detectadas</td>
+            <td><span class="pill green">Redução direta de custo</span></td>
+          </tr>
+          <tr>
+            <td><strong>Narrativas de dados</strong></td>
+            <td>Preparar briefing executivo demora 2h por semana</td>
+            <td><span class="pill green">Automação de reporte</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <hr class="section-rule">
+
+  <div style="font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: var(--faint); text-align: center; padding-bottom: 1rem;">
+    Flash Data Platform · Proposta Técnica · 2025 · Documento confidencial
+  </div>
+
+</div>
+</body>
+</html>

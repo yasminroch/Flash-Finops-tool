@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-jose[cryptography]
+passlib
+python-multipart
+duckdb
+pandas
+httpx
+pydantic
+pydantic-settings
+python-dotenv
+psycopg2-binary
