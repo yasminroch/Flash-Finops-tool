@@ -22,4 +22,5 @@ services:
     buildContext: frontend
     envVars:
       - key: PORT
-        value: 4173
+        value: 80
+      - key: VITE_API_URL
