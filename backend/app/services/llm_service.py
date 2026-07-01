@@ -41,7 +41,7 @@ Não mostre o SQL na resposta — foque na resposta humana.
 
 
 class LLMService:
-    """Gemini chatbot with data access"""
+    """Gemini chatbot with data access capabilities."""
 
     def __init__(self):
         settings = get_settings()
@@ -92,25 +92,25 @@ class LLMService:
 
     def process_message(self, question: str, schema_context: str) -> dict:
         """
-        Process user message through Gemini
-        Should returns: {"type": "chat"|"data", "answer": str, "sql": str|None, "data": dict|None}
+        Process user message through Gemini.
+        Returns: {"type": "chat"|"data", "answer": str, "sql": str|None, "data": dict|None}
         """
-        # Step 1- ask Gemini what to do with this message
+        # Step 1: Ask Gemini what to do with this message
         prompt = SYSTEM_INSTRUCTION.format(schema_context=schema_context) + f"\n\nUsuário: {question}"
         response = self._call_gemini(prompt)
 
         if not response:
-            # if API failed use smart fallback instead of error message
+            # API failed — use smart fallback instead of error message
             return self._smart_fallback(question)
 
-        # Step 2 - check if Gemini wants to query data
+        # Step 2: Check if Gemini wants to query data
         if "###SQL###" in response:
             sql = response.split("###SQL###")[1].strip()
             # Clean any leftover markdown
             sql = sql.replace("```sql", "").replace("```", "").strip()
             return {"type": "data", "sql": sql, "answer": None, "data": None}
 
-        # Step 3 - a conversational response
+        # Step 3: It's a conversational response
         return {
             "type": "chat",
             "answer": response,
@@ -119,13 +119,13 @@ class LLMService:
         }
 
     def explain_data(self, question: str, data_summary: str) -> str:
-        """Ask Gemini to explain query results in natural language NLP"""
+        """Ask Gemini to explain query results in natural language."""
         prompt = EXPLAIN_PROMPT.format(question=question, data_summary=data_summary)
         response = self._call_gemini(prompt)
         return response if response else "Aqui estão os dados que encontrei."
 
     def generate_insights(self, data_summary: str) -> str:
-        """Generate insights from data"""
+        """Generate insights from data."""
         prompt = (
             "Você é um analista de FinOps da Flash. Analise esses dados de licenças "
             "Metabase e destaque as 3 mudanças mais relevantes. "
@@ -136,7 +136,7 @@ class LLMService:
         return result if result else "Configure a API key do Gemini para gerar insights automáticos."
 
     def _smart_fallback(self, question: str) -> dict:
-        """Smart fallback when Gemini API is unavailable"""
+        """Smart fallback when Gemini API is unavailable."""
         q = question.lower().strip()
 
         # Greetings
@@ -181,7 +181,7 @@ class LLMService:
         # Default: helpful message
         return {
             "type": "chat",
-            "answer": "A API do Gemini não está respondendo no momento. Sem ela, só consigo responder perguntas pré-definidas sobre: custos, usuários ativos, usuários ociosos, departamentos e atividade.\n\nPra funcionar 100%, configure uma API key válida do Google AI Studio (formato AIzaSy...) no arquivo .env.",
+            "answer": "⚠️ A API do Gemini não está respondendo no momento. Sem ela, só consigo responder perguntas pré-definidas sobre: custos, usuários ativos, usuários ociosos, departamentos e atividade.\n\nPra funcionar 100%, configure uma API key válida do Google AI Studio (formato AIzaSy...) no arquivo .env.",
             "sql": None,
             "data": None,
         }

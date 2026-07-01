@@ -6,7 +6,7 @@ router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 
 
 def sanitize_value(val):
-    """Convert NaN/Inf values to none for JSON serialization."""
+    """Convert NaN/Inf values to None for JSON serialization."""
     if val is None:
         return None
     if isinstance(val, float):
@@ -117,7 +117,7 @@ async def get_users_by_cost_center():
 
 @router.get("/idle-users")
 async def get_idle_users():
-    """Get list of idle users - enabled but no recent activity"""
+    """Get list of idle users (enabled but no recent activity)."""
     db = get_db_service()
 
     df = db.execute_query("""
@@ -160,7 +160,7 @@ async def get_activity_timeline():
 
 @router.get("/top-active-users")
 async def get_top_active_users():
-    """Get most active users"""
+    """Get most active users."""
     db = get_db_service()
 
     df = db.execute_query("""

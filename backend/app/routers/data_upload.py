@@ -9,7 +9,7 @@ router = APIRouter(prefix="/api/data", tags=["data"])
 
 
 def sanitize_table_name(filename: str) -> str:
-    """Convert filename to a valid SQL table name"""
+    """Convert filename to a valid SQL table name."""
     name = filename.rsplit(".", 1)[0]  # Remove extension
     name = re.sub(r'[^a-zA-Z0-9_]', '_', name)  # Replace special chars
     name = re.sub(r'_+', '_', name)  # Collapse multiple underscores
@@ -21,12 +21,12 @@ def sanitize_table_name(filename: str) -> str:
 
 @router.post("/upload")
 async def upload_csv(file: UploadFile = File(...)):
-    """Upload a csv file and make it available as a DuckDB table"""
+    """Upload a CSV file and make it available as a DuckDB table."""
     if not file.filename.endswith('.csv'):
         raise HTTPException(status_code=400, detail="Apenas arquivos .csv são aceitos")
 
     try:
-        # Read the csv
+        # Read the CSV
         contents = await file.read()
         df = pd.read_csv(io.BytesIO(contents))
 
@@ -65,14 +65,14 @@ async def upload_csv(file: UploadFile = File(...)):
 
 @router.get("/datasets")
 async def list_datasets():
-    """List all uploaded datasets"""
+    """List all uploaded datasets."""
     datasets = get_uploaded_datasets()
     return {"datasets": datasets}
 
 
 @router.get("/tables")
 async def list_all_tables():
-    """List all tables available in DuckDB (original + uploaded)"""
+    """List all tables available in DuckDB (original + uploaded)."""
     db = get_db_service()
     df = db.execute_query("SHOW TABLES")
     tables = []

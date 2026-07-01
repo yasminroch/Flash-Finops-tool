@@ -4,12 +4,22 @@ import os
 
 
 class Settings(BaseSettings):
+    # Gemini
     gemini_api_key: str = ""
-    jwt_secret: str = "flash-analytics-secret-change-me"
+
+    # JWT
+    jwt_secret: str = "change-this-to-a-random-string"
     jwt_algorithm: str = "HS256"
     jwt_expiration_hours: int = 24
-    data_path: str = os.environ.get("DATA_PATH", "/app/Data")
+
+    # Database
     database_url: str = "postgresql://flash:flash123@localhost:5432/flash_analytics"
+
+    # Data
+    data_path: str = "/app/data"
+
+    # Users (JSON string)
+    default_users: str = '{"admin@flash.com":{"password":"flash123","name":"Admin Flash","role":"admin"}}'
 
     class Config:
         env_file = ".env"

@@ -6,13 +6,13 @@ import time
 
 
 def get_connection():
-    """Get a PostgreSQL connection"""
+    """Get a PostgreSQL connection."""
     settings = get_settings()
     return psycopg2.connect(settings.database_url)
 
 
 def init_db():
-    """Initialize database tables - retries on connection failure"""
+    """Initialize database tables. Retries on connection failure."""
     max_retries = 10
     for attempt in range(max_retries):
         try:
@@ -57,7 +57,7 @@ def init_db():
 
 
 def save_message(user_email: str, role: str, content: str, sql_query: str = None):
-    """Save a chat message to history"""
+    """Save a chat message to history."""
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -73,7 +73,7 @@ def save_message(user_email: str, role: str, content: str, sql_query: str = None
 
 
 def get_chat_history(user_email: str, limit: int = 50) -> list:
-    """Get chat history for a user"""
+    """Get chat history for a user."""
     try:
         conn = get_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -100,7 +100,7 @@ def get_chat_history(user_email: str, limit: int = 50) -> list:
 
 
 def clear_chat_history(user_email: str):
-    """Clear chat history for a user"""
+    """Clear chat history for a user."""
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -113,7 +113,7 @@ def clear_chat_history(user_email: str):
 
 
 def save_uploaded_dataset(filename: str, table_name: str, row_count: int, columns: str, user_email: str):
-    """Record an uploaded dataset"""
+    """Record an uploaded dataset."""
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -130,7 +130,7 @@ def save_uploaded_dataset(filename: str, table_name: str, row_count: int, column
 
 
 def get_uploaded_datasets() -> list:
-    """Get list of uploaded datasets"""
+    """Get list of uploaded datasets."""
     try:
         conn = get_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)

@@ -18,7 +18,7 @@ def sanitize_value(val):
 
 @router.post("/execute", response_model=QueryResponse)
 async def execute_query(request: QueryRequest):
-    """Execute a SQL query against duckdb"""
+    """Execute a SQL query against DuckDB."""
     db = get_db_service()
 
     # Basic SQL injection prevention for MVP
@@ -47,7 +47,7 @@ async def execute_query(request: QueryRequest):
 
 @router.get("/tables")
 async def list_tables():
-    """List all available tables"""
+    """List all available tables."""
     db = get_db_service()
     df = db.execute_query("SHOW TABLES")
     return {"tables": df["name"].tolist()}
@@ -55,7 +55,7 @@ async def list_tables():
 
 @router.get("/schema/{table_name}")
 async def get_table_schema(table_name: str):
-    """Get schema for a specific table"""
+    """Get schema for a specific table."""
     db = get_db_service()
     try:
         df = db.execute_query(f"DESCRIBE {table_name}")

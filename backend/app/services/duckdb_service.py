@@ -5,14 +5,14 @@ from ..config import get_settings
 
 
 class DuckDBService:
-    """Duckdb data source for the Flash Analytics mvp"""
+    """DuckDB data source for the Flash Analytics MVP."""
 
     def __init__(self):
         self._conn = duckdb.connect(":memory:")
         self._load_data()
 
     def _load_data(self):
-        """Load CSV data into DuckDB tables"""
+        """Load CSV data into DuckDB tables."""
         settings = get_settings()
         data_path = os.path.abspath(settings.data_path)
 
@@ -31,7 +31,7 @@ class DuckDBService:
                 .str.replace(",", ".", regex=False)
                 .astype(float)
             )
-            # Parse date dd-mm-yyyy
+            # Parse date (dd/mm/yyyy)
             df["data_parsed"] = pd.to_datetime(df["data"], format="%d/%m/%Y")
             self._conn.execute(
                 "CREATE TABLE contract_costs AS SELECT * FROM df"
@@ -43,7 +43,7 @@ class DuckDBService:
         )
         if os.path.exists(users_path):
             df = pd.read_csv(users_path)
-            # Clean metabase_user_id - remove dots used as thousands separator
+            # Clean metabase_user_id (remove dots used as thousands separator)
             df["metabase_user_id"] = (
                 df["metabase_user_id"]
                 .astype(str)
@@ -66,7 +66,7 @@ class DuckDBService:
             )
 
     def execute_query(self, sql: str) -> pd.DataFrame:
-        """Execute a sql query and return a dataframe"""
+        """Execute a SQL query and return a DataFrame."""
         try:
             result = self._conn.execute(sql).df()
             return result
