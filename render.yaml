@@ -21,6 +21,6 @@ services:
     dockerfilePath: frontend/Dockerfile
     buildContext: frontend
     envVars:
+      - key: BACKEND_URL
       - key: PORT
         value: 80
-      - key: VITE_API_URL
